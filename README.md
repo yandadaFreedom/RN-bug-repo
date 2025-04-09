@@ -1,6 +1,4 @@
-# zIndex-invalid
-
-![Build](https://github.com/yandadaFreedom/zIndex-invalid/workflows/Pre%20Merge%20Checks/badge.svg)
+# RN-bug-repo
 
 This is your new React Native Reproducer project.
 
