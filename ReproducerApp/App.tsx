@@ -49,14 +49,14 @@ const SectionListDemo = () => {
 
     sections.forEach((section) => {
         const headerHeight = SECTION_HEADER_HEIGHT
+        // header
         layouts.push({
           length: headerHeight,
           offset,
           index: layouts.length
         })
         offset += headerHeight
-
-        // 添加该 section 中所有 items 的位置信息
+        // items
         section.data.forEach(()=> {
           const contenteight = ITEM_HEIGHT
           layouts.push({
@@ -66,6 +66,7 @@ const SectionListDemo = () => {
           })
           offset += contenteight
         })
+        // footer
         layouts.push({
           length: 0,
           offset,
