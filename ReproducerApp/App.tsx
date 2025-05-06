@@ -1,131 +1,153 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, SectionList, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
+// Generate 1000 items divided into 10 sections
+const generateData = () => {
+  const sections = [];
+  const itemsPerSection = 100;
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+  for (let i = 0; i < 10; i++) {
+    const sectionData = [];
+    for (let j = 0; j < itemsPerSection; j++) {
+      const itemNumber = i * itemsPerSection + j + 1;
+      sectionData.push({
+        id: `item-${itemNumber}`,
+        title: `Item ${itemNumber}`,
+        description: `This is item number ${itemNumber} in section ${i + 1}`,
+      });
+    }
+    sections.push({
+      title: `Section ${i + 1}`,
+      data: sectionData,
+    });
+  }
+  return sections;
+};
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Item = ({ title, description }: any) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+    <Text style={styles.description}>{description}</Text>
+  </View>
+);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const SectionHeader = ({ title }: any) => (
+  <View style={styles.sectionHeader}>
+    <Text style={styles.sectionHeaderText}>{title}</Text>
+  </View>
+);
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const SectionListDemo = () => {
+  const sections = generateData();
+  const sectionListRef = useRef(null);
+  const [sectionIndex, setSectionIndex] = useState('');
+  const [itemIndex, setItemIndex] = useState('');
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the recommendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
+  const handleScrollToLocation = () => {};
 
   return (
-    <View style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.controls}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Section (1-10)"
+            keyboardType="numeric"
+            value={sectionIndex}
+            onChangeText={setSectionIndex}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Item (1-100)"
+            keyboardType="numeric"
+            value={itemIndex}
+            onChangeText={setItemIndex}
+          />
+        </View>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={handleScrollToLocation}
+        >
+          <Text style={styles.buttonText}>Scroll to Location</Text>
+        </TouchableOpacity>
+      </View>
+      <SectionList
+        ref={sectionListRef}
+        sections={sections}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <Item title={item.title} description={item.description} />}
+        renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
+        stickySectionHeadersEnabled={true}
       />
-      <ScrollView
-        style={backgroundStyle}>
-        <View style={{paddingRight: safePadding}}>
-          <Header/>
-        </View>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            paddingHorizontal: safePadding,
-            paddingBottom: safePadding,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </View>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  item: {
+    height: 100,
+    backgroundColor: '#ffffff',
+    padding: 20,
+    marginVertical: 4,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  sectionDescription: {
-    marginTop: 8,
+  title: {
+    height: 40,
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: 'bold',
   },
-  highlight: {
-    fontWeight: '700',
+  description: {
+    fontSize: 14,
+    color: '#666',
+  },
+  sectionHeader: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    paddingLeft: 16,
+  },
+  sectionHeaderText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  controls: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    marginRight: 8,
+  },
+  button: {
+    backgroundColor: '#2196F3',
+    padding: 12,
+    borderRadius: 4,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
-export default App;
+export default SectionListDemo;
