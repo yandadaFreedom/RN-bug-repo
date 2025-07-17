@@ -1,5 +1,7 @@
 # RN-bug-repo
 
+https://github.com/facebook/react-native/issues/50589
+
 This is your new React Native Reproducer project.
 
 # Reproducer TODO list
