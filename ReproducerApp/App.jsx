@@ -11,7 +11,7 @@ const App = () => {
           <Text>unexpected behavior</Text>
         </View>
       </View>
-      {/* parent container isn't contains padding */}
+      {/* parent container doesn’t contain padding */}
       <View style={{ marginTop: 100}}><Text>paddingHorizontal 0 + left 50% + translateX: -50%</Text></View>
       <View style={{ ...styles.warp }}>
         <View style={styles.child}>
